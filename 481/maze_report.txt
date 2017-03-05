@@ -1,0 +1,47 @@
+The program is structured with the main program and a player class that utilizes the Steepest Descent Hill Climbing Method with “backtracking” utilized as well.
+
+maze.py
+    read input file to load: origin, destination, quick sand, spider nets, and excess fees
+    initialize player class for the agent
+    while the agent is not at the exit and the agent is not captured
+        calculate the heuristic value to determine agent's movement with information returned from the sensor [up, down, left, right]
+        move in the direction with the lowest cost
+        if multiple directions of equal value exist
+	recalculate the heuristic using cross coordinates 
+            	if the recalculated costs remain the same randomly select a direction
+    	print the maze with final output provided by player class
+
+Player class
+    initialized with data from maze.py
+        although the dangerous locations are passed to the agent it is not able to detect danger unless it is within two spaces of an object
+    keep track of detected traps and the location from where it was detected
+    keep track of total steps and total cost to traverse the map
+    if danger or a border is detected do not allow the agent to move in that direction
+    if danger detected is center of a spider net expand detected danger zone by one space in all directions
+
+The heuristic used to determine movement is Manhattan distance as suggested by Amit Patel. According to Patel, this heuristic is the standard for a square grid.
+Manhattan distance is calculated by multiplying the sum/difference between x values and y values with a cost value. The sum/difference calculated between x values and y values is from the current node to the destination.
+
+If there is a collision the direction with the lower cross-product of the coordinates calculated with: current, origin, and destination is calculated; and if another collision still occurs then randomly select the direction.
+To avoid the issue of travelling over the same space too many times the weight increases exponentially for the space each time it is evaluated again.
+
+def heuristic(coordinate, destination, cost=1):
+    if not dangerous:
+        dx = abs(coordinate[0] - destination[0]) # current_x - destination_x
+        dy = abs(coordinate[1] - destination[1]) # current_y - destination_y
+        return cost * (dx + dy)                  # cost * sum
+    return float('inf')                          # dangerous location
+
+def tie_heuristic(coord, begin, end, cost):
+    dx1 = coord[0] - end[0]                                 # current_x - destination_x
+    dy1 = coord[1] - end[1]                                 # current_y - destination_y
+    dx2 = begin[0] - end[0]                                 # origin_x  - destination_x
+    dy2 = begin[1] - end[1]                                 # origin_y  - destination_y
+    return cost + abs((dx1 * dy2) - (dx2 * dy1)) * 0.001    # cross_product multiplied by a fixed weight
+
+Sources:
+    http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html#heuristics-for-grid-maps
+    http://theory.stanford.edu/~amitp/GameProgramming/ImplementationNotes.html#sketch
+    https://en.wikipedia.org/wiki/Hill_climbing#Pseudocode
+
+
