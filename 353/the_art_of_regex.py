@@ -9,8 +9,8 @@ def main():
     # text = re.sub('(\[\d.*\d\])', ' ', text)        # replace all elements matching [##.##]
     # text = re.sub('[\[\]\';:,.()\-"!?]', ' ', text) # replace all characters matching: ';:,.()-
     # text = re.sub('\d', ' ', text)                  # replace all numbers
-	text = re.sub('([^a-zA-Z\s\'])', ' ', text)       # replace all characters not alpha, whitespace, or '
-	text = re.sub('([\'])', '', text)                 # replace all ' with no space
+    text = re.sub('([^a-zA-Z\s\'])', ' ', text)       # replace all characters not alpha, whitespace, or '
+    text = re.sub('([\'])', '', text)                 # replace all ' with no space
     alpha_dict = alpha_frequency(text)
     word_dict = word_frequency(text)
     results(alpha_dict, word_dict, longest_word(word_dict))
